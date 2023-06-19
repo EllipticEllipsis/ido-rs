@@ -1,8 +1,8 @@
-use std::fmt;
+#![allow(non_camel_case_types)]
 
+use std::fmt;
 use strum_macros::{Display, EnumIter, FromRepr};
 
-#[allow(non_camel_case_types)]
 #[derive(Clone, Copy, Debug, PartialEq, EnumIter, FromRepr)]
 pub enum register {
     // GPR
@@ -83,88 +83,193 @@ pub enum register {
     xnoreg,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq)]
+enum RegNaming {
+    Numeric,
+    Assembler, // Mostly numeric, $sp different
+    O32,
+}
+
+const REG_NAMING: RegNaming = RegNaming::Assembler;
+// const REG_NAMING: RegNaming = RegNaming::O32;
+
 impl fmt::Display for register {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         // Only numeric for now for simplicity
-        write!(f, "{}", match self {
-            register::xr0 => "$0",
-            register::xr1 => "$1",
-            register::xr2 => "$2",
-            register::xr3 => "$3",
-            register::xr4 => "$4",
-            register::xr5 => "$5",
-            register::xr6 => "$6",
-            register::xr7 => "$7",
-            register::xr8 => "$8",
-            register::xr9 => "$9",
-            register::xr10 => "$10",
-            register::xr11 => "$11",
-            register::xr12 => "$12",
-            register::xr13 => "$13",
-            register::xr14 => "$14",
-            register::xr15 => "$15",
-            register::xr16 => "$16",
-            register::xr17 => "$17",
-            register::xr18 => "$18",
-            register::xr19 => "$19",
-            register::xr20 => "$20",
-            register::xr21 => "$21",
-            register::xr22 => "$22",
-            register::xr23 => "$23",
-            register::xr24 => "$24",
-            register::xr25 => "$25",
-            register::xr26 => "$26",
-            register::xr27 => "$27",
-            register::xr28 => "$28",
-            register::xr29 => "$29",
-            register::xr30 => "$30",
-            register::xr31 => "$31",
-            register::xfr0 => "$f0",
-            register::xfr1 => "$f1",
-            register::xfr2 => "$f2",
-            register::xfr3 => "$f3",
-            register::xfr4 => "$f4",
-            register::xfr5 => "$f5",
-            register::xfr6 => "$f6",
-            register::xfr7 => "$f7",
-            register::xfr8 => "$f8",
-            register::xfr9 => "$f9",
-            register::xfr10 => "$f10",
-            register::xfr11 => "$f11",
-            register::xfr12 => "$f12",
-            register::xfr13 => "$f13",
-            register::xfr14 => "$f14",
-            register::xfr15 => "$f15",
-            register::xfr16 => "$f16",
-            register::xfr17 => "$f17",
-            register::xfr18 => "$f18",
-            register::xfr19 => "$f19",
-            register::xfr20 => "$f20",
-            register::xfr21 => "$f21",
-            register::xfr22 => "$f22",
-            register::xfr23 => "$f23",
-            register::xfr24 => "$f24",
-            register::xfr25 => "$f25",
-            register::xfr26 => "$f26",
-            register::xfr27 => "$f27",
-            register::xfr28 => "$f28",
-            register::xfr29 => "$f29",
-            register::xfr30 => "$f30",
-            register::xfr31 => "$f31",
-            register::xfcc0 => "xfcc0",
-            register::xfcc1 => "xfcc1",
-            register::xfcc2 => "xfcc2",
-            register::xfcc3 => "xfcc3",
-            register::xfcc4 => "xfcc4",
-            register::xfcc5 => "xfcc5",
-            register::xfcc6 => "xfcc6",
-            register::xfcc7 => "xfcc7",
-            register::xnoreg => "xnoreg",
-        })
+        match REG_NAMING {
+            RegNaming::Numeric | RegNaming::Assembler => {
+                write!(
+                    f,
+                    "{}",
+                    match self {
+                        register::xr0 => "$0",
+                        register::xr1 => "$1",
+                        register::xr2 => "$2",
+                        register::xr3 => "$3",
+                        register::xr4 => "$4",
+                        register::xr5 => "$5",
+                        register::xr6 => "$6",
+                        register::xr7 => "$7",
+                        register::xr8 => "$8",
+                        register::xr9 => "$9",
+                        register::xr10 => "$10",
+                        register::xr11 => "$11",
+                        register::xr12 => "$12",
+                        register::xr13 => "$13",
+                        register::xr14 => "$14",
+                        register::xr15 => "$15",
+                        register::xr16 => "$16",
+                        register::xr17 => "$17",
+                        register::xr18 => "$18",
+                        register::xr19 => "$19",
+                        register::xr20 => "$20",
+                        register::xr21 => "$21",
+                        register::xr22 => "$22",
+                        register::xr23 => "$23",
+                        register::xr24 => "$24",
+                        register::xr25 => "$25",
+                        register::xr26 => "$26",
+                        register::xr27 => "$27",
+                        register::xr28 => "$28",
+                        register::xr29 => {
+                            if REG_NAMING == RegNaming::Numeric {
+                                "$29"
+                            } else {
+                                "$sp"
+                            }
+                        }
+                        register::xr30 => "$30",
+                        register::xr31 => "$31",
+                        register::xfr0 => "$f0",
+                        register::xfr1 => "$f1",
+                        register::xfr2 => "$f2",
+                        register::xfr3 => "$f3",
+                        register::xfr4 => "$f4",
+                        register::xfr5 => "$f5",
+                        register::xfr6 => "$f6",
+                        register::xfr7 => "$f7",
+                        register::xfr8 => "$f8",
+                        register::xfr9 => "$f9",
+                        register::xfr10 => "$f10",
+                        register::xfr11 => "$f11",
+                        register::xfr12 => "$f12",
+                        register::xfr13 => "$f13",
+                        register::xfr14 => "$f14",
+                        register::xfr15 => "$f15",
+                        register::xfr16 => "$f16",
+                        register::xfr17 => "$f17",
+                        register::xfr18 => "$f18",
+                        register::xfr19 => "$f19",
+                        register::xfr20 => "$f20",
+                        register::xfr21 => "$f21",
+                        register::xfr22 => "$f22",
+                        register::xfr23 => "$f23",
+                        register::xfr24 => "$f24",
+                        register::xfr25 => "$f25",
+                        register::xfr26 => "$f26",
+                        register::xfr27 => "$f27",
+                        register::xfr28 => "$f28",
+                        register::xfr29 => "$f29",
+                        register::xfr30 => "$f30",
+                        register::xfr31 => "$f31",
+                        register::xfcc0 => "xfcc0",
+                        register::xfcc1 => "xfcc1",
+                        register::xfcc2 => "xfcc2",
+                        register::xfcc3 => "xfcc3",
+                        register::xfcc4 => "xfcc4",
+                        register::xfcc5 => "xfcc5",
+                        register::xfcc6 => "xfcc6",
+                        register::xfcc7 => "xfcc7",
+                        register::xnoreg => "xnoreg",
+                    }
+                )
+            }
+            RegNaming::O32 => {
+                write!(
+                    f,
+                    "{}",
+                    match self {
+                        register::xr0 => "zero",
+                        register::xr1 => "AT",
+                        register::xr2  => "v0",
+                        register::xr3  => "v1",
+                        register::xr4  => "a0",
+                        register::xr5  => "a1",
+                        register::xr6  => "a2",
+                        register::xr7  => "a3",
+                        register::xr8  => "t0",
+                        register::xr9  => "t1",
+                        register::xr10 => "t2",
+                        register::xr11 => "t3",
+                        register::xr12 => "t4",
+                        register::xr13 => "t5",
+                        register::xr14 => "t6",
+                        register::xr15 => "t7",
+                        register::xr16 => "s0",
+                        register::xr17 => "s1",
+                        register::xr18 => "s2",
+                        register::xr19 => "s3",
+                        register::xr20 => "s4",
+                        register::xr21 => "s5",
+                        register::xr22 => "s6",
+                        register::xr23 => "s7",
+                        register::xr24 => "t8",
+                        register::xr25 => "t9",
+                        register::xr26 => "k0",
+                        register::xr27 => "k1",
+                        register::xr28 => "gp",
+                        register::xr29 => "sp",
+                        register::xr30 => "fp",
+                        register::xr31 => "ra",
+                        register::xfr0 => "fv0",
+                        register::xfr1 => "fv0f",
+                        register::xfr2 => "fv1",
+                        register::xfr3 => "fv1f",
+                        register::xfr4 => "ft0",
+                        register::xfr5 => "ft0f",
+                        register::xfr6 => "ft1",
+                        register::xfr7 => "ft1f",
+                        register::xfr8 => "ft2",
+                        register::xfr9 => "ft2f",
+                        register::xfr10 => "ft3",
+                        register::xfr11 => "ft3f",
+                        register::xfr12 => "fa0",
+                        register::xfr13 => "fa0f",
+                        register::xfr14 => "fa1",
+                        register::xfr15 => "fa1f",
+                        register::xfr16 => "ft4",
+                        register::xfr17 => "ft4f",
+                        register::xfr18 => "ft5",
+                        register::xfr19 => "ft5f",
+                        register::xfr20 => "fs0",
+                        register::xfr21 => "fs0f",
+                        register::xfr22 => "fs1",
+                        register::xfr23 => "fs1f",
+                        register::xfr24 => "fs2",
+                        register::xfr25 => "fs2f",
+                        register::xfr26 => "fs3",
+                        register::xfr27 => "fs3f",
+                        register::xfr28 => "fs4",
+                        register::xfr29 => "fs4f",
+                        register::xfr30 => "fs5",
+                        register::xfr31 => "fs5f",
+                        // Not clear what these are as yet
+                        register::xfcc0 => "xfcc0",
+                        register::xfcc1 => "xfcc1",
+                        register::xfcc2 => "xfcc2",
+                        register::xfcc3 => "xfcc3",
+                        register::xfcc4 => "xfcc4",
+                        register::xfcc5 => "xfcc5",
+                        register::xfcc6 => "xfcc6",
+                        register::xfcc7 => "xfcc7",
+                        register::xnoreg => "xnoreg",
+                    }
+                )
+            }
+        }
     }
 }
 
-#[allow(non_camel_case_types)]
 #[derive(Clone, Copy, Debug, Display, PartialEq, EnumIter, FromRepr)]
 pub enum GPR {
     zero,
@@ -202,7 +307,6 @@ pub enum GPR {
 }
 
 // asmcodes specify the assembler instructions
-#[allow(non_camel_case_types)]
 #[derive(Clone, Copy, PartialEq, EnumIter, FromRepr)]
 pub enum asmcode {
     zabs,
@@ -1074,6 +1178,7 @@ impl fmt::Display for asmcode {
                 asmcode::zmtps => "bad       ",
                 asmcode::zbad => "bad       ",
             }
+            .trim()
         )
     }
 }
@@ -1084,7 +1189,6 @@ impl fmt::Debug for asmcode {
     }
 }
 
-#[allow(non_camel_case_types)]
 #[derive(Clone, Copy, Debug, PartialEq, EnumIter, FromRepr)]
 pub enum format {
     frob,  // reg, offset(+/-32k), base
@@ -1105,7 +1209,6 @@ pub enum format {
     frrrr, // reg, reg, reg, reg
 }
 
-#[allow(non_camel_case_types)]
 #[derive(Clone, Copy, Debug, PartialEq, EnumIter, FromRepr)]
 pub enum set_value {
     set_undefined,
@@ -1155,7 +1258,6 @@ impl fmt::Display for set_value {
     }
 }
 
-#[allow(non_camel_case_types)]
 #[derive(Debug, PartialEq, EnumIter, FromRepr)]
 pub enum Itype {
     ilabel,
@@ -1221,4 +1323,28 @@ pub enum Itype {
     iprologue,
     iedata,
     ialloc,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, FromRepr)]
+pub enum opt_type {
+    o_undefined,
+    o_optimize,
+    o_pic,
+}
+
+impl fmt::Display for opt_type {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            opt_type::o_undefined => unimplemented!(),
+            opt_type::o_optimize => write!(f, "O"),
+            opt_type::o_pic => write!(f, "pic"),
+        }
+    }
+}
+
+pub enum opt_arg_type {
+    opt_none,
+    opt_int,
+    opt_float,
+    opt_string,
 }

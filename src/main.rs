@@ -13,8 +13,8 @@ fn main() -> () {
     let in_filepath = &argv[1];
     let bytes = read(in_filepath).unwrap();
 
-    println!("Dump of contents of {}", in_filepath);
-    debugging::print_bytes(&bytes);
+    // println!("Dump of contents of {}", in_filepath);
+    // debugging::print_bytes(&bytes);
 
     binasm::process_records(&bytes);
 }
