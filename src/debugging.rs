@@ -1,3 +1,6 @@
+// Using anything from this file is optional
+#![allow(dead_code)]
+
 fn make_printable(c: u8) -> char {
     if 0x20 <= c && c <= 0x7E {
         c as char
