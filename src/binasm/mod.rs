@@ -1,7 +1,9 @@
+mod constants;
+
 use std::fmt;
 use std::mem;
 
-use crate::mips::*;
+use constants::*;
 
 const BINASM_RECORD_LENGTH: usize = 0x10;
 
@@ -1087,28 +1089,5 @@ pub fn process_records(bytes: &[u8]) -> usize {
         process_record(bytes, &mut off);
         off += BINASM_RECORD_LENGTH;
     }
-    // let mut is_data = false;
-    // for record in bytes.chunks_exact(BINASM_RECORD_LENGTH) {
-    //     let t = (record[5] & 0b11111) as usize;
-    //     let itype = Itype::from_repr(t).unwrap();
-
-    //     match itype {
-    //         _ => {
-    //             print!("{:12}: ", format!("{itype:?}"));
-    //             for b in record {
-    //                 print!("{b:02X} ");
-    //             }
-    //             println!()
-    //         }
-    //     }
-
-    //     is_data = false;
-    // }
-    // let mut off = 0;
-
-    // while off < b.len() {
-
-    // }
-
     return off;
 }

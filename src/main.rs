@@ -2,7 +2,6 @@ use std::fs::read;
 
 mod binasm;
 mod debugging;
-mod mips;
 
 fn main() -> () {
     let argv: Vec<String> = std::env::args().collect();
